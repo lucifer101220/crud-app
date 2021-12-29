@@ -23,6 +23,12 @@
         "@typescript-eslint"
     ],
     "rules": {
+        "prettier/prettier": [
+            "error",
+            {
+              "endOfLine": "auto"
+            }
+        ],
         "react/prop-types": "off",
         "no-case-declarations": "off",
         "react/react-in-jsx-scope": "off"

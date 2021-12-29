@@ -1,10 +1,20 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
+import queryString from 'query-string';
 import { Func } from '../../type/types';
 import { IndexedObject } from '../../utils/type';
 
+export type Params = {
+  page?: number;
+  limit?: number;
+  sortBy?: string;
+  order?: string;
+  search?: string;
+};
+
 const TIMEOUT = 1 * 60 * 1000;
 axios.defaults.timeout = TIMEOUT;
-axios.defaults.baseURL = process.env.REACT_APP_BASE_API_URL;
+axios.defaults.baseURL = process.env.REACT_APP_API_URL;
+axios.defaults.paramsSerializer = (params: Params) => queryString.stringify(params);
 
 const setupAxiosInterceptors = (onUnauthenticated: Func) => {
   const onRequestSuccess = (config: AxiosRequestConfig) => {
@@ -17,7 +27,12 @@ const setupAxiosInterceptors = (onUnauthenticated: Func) => {
     config.headers.post['Access-Control-Allow-Origin'] = '*';
     return config;
   };
-  const onResponseSuccess = (response: AxiosResponse) => response;
+  const onResponseSuccess = (response: AxiosResponse) => {
+    if (response && response.data) {
+      return response.data;
+    }
+    return response;
+  };
   const onResponseError = (err: IndexedObject) => {
     const status = err.status || (err.response ? err.response.status : 0);
     if (status === 403 || status === 401) {

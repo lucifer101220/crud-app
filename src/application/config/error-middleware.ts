@@ -33,7 +33,7 @@ export default () => (next: any) => (action: any) => {
     // Dispatch initial pending promise, but catch any errors
     return next(action).catch((error: any) => {
       console.error(
-        `${action.type} caught at middleware with reason: ${JSON.stringify(error.message)}.`,
+        `${action.type} caught at middleware with reason: ${JSON.stringify(error.message)}.`
       );
       if (error && error.response && error.response.data) {
         const message = getErrorMessage(error.response.data);

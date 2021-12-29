@@ -24,8 +24,12 @@
     "@types/react": "^17.0.3",
     "@types/react-dom": "^17.0.3",
     "@types/react-router-dom": "^5.1.7",
+    "antd": "^4.18.0",
     "axios": "^0.21.1",
+    "node-sass": "^6.0.1",
+    "query-string": "^7.0.1",
     "react": "^17.0.2",
+    "react-app-env": "^1.2.3",
     "react-axios-helpers": "^1.2.3",
     "react-dom": "^17.0.2",
     "react-redux": "^7.2.3",
@@ -38,8 +42,8 @@
     "yarn": "^1.22.17"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "react-app-env --env-file=src/.env.development start",
+    "build": "react-app-env --env-file=src/.env.production build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "lint": "eslint \"**/*.{js,ts}\" --quiet --fix",

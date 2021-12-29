@@ -1,0 +1,46 @@
+.users_page {
+    .users_list {
+        --column-space: 10px;
+        --row-space: 10px;
+        --columns: 4;
+        display: flex;
+        flex-wrap: wrap;
+        margin-left: calc(-1 * var(--column-space));
+        margin-bottom: calc(-1 * var(--row-space));
+        .user_item_wrap {
+            width: calc((100% / var(--columns)) - var(--column-space));
+            margin-left: var(--column-space);
+            margin-bottom: var(--row-space);
+            min-height: 200px;
+            padding: 10px;
+            .user_item {
+                overflow: hidden;
+                border-radius: 5px;
+                box-shadow: rgba(215, 215, 215, .2)  4px 4px 8px;
+                width: 100%;
+                height: 100%;
+                .ant-card-body {
+                    padding: 16px 20px;
+                    .ant-card-meta-avatar {
+                        padding-right: 12px;
+                    }
+                    .ant-card-meta-detail {
+                        .ant-card-meta-description {
+                            .user_detail {
+                                p {
+                                    color: rgba(0, 0, 0, 0.65);
+                                    line-height: 26px;
+                                }
+                            }
+                        }
+                    }
+                }
+                .ant-card-actions {
+                    li {
+                        margin: 8px 0;
+                    }
+                }
+            }
+        }
+    }
+}

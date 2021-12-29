@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Provider } from 'react-redux';
-import './index.css';
+import 'antd/dist/antd.css';
+import './index.scss';
 import store from './reducer';
 import axios from 'axios';
 import ReactDOM from 'react-dom';
@@ -14,7 +15,6 @@ import { BrowserRouter } from 'react-router-dom';
 const customAxiosInstance = axios.create();
 setupAxiosInterceptors(() => returnVoidDummyFn());
 
-const rootElement = document.getElementById('root');
 ReactDOM.render(
   <Provider store={store}>
     <AxiosProvider instance={customAxiosInstance}>
@@ -23,7 +23,7 @@ ReactDOM.render(
       </BrowserRouter>
     </AxiosProvider>
   </Provider>,
-  rootElement,
+  document.getElementById('root')
 );
 
 // If you want to start measuring performance in your app, pass a function

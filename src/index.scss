@@ -1,0 +1,120 @@
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+  	font-family: 'Poppins', sans-serif;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+.ant-layout {
+	.site-layout-background {
+		.page {
+			.page_header {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				padding: 10px 10px 20px;
+				.total_items {
+					p {
+						>span {
+							color: #1890ff;
+							font-size: 18px;
+							font-weight: 500;
+						}
+					}
+				}
+				.page_actions {
+					display: flex;
+					align-items: center;
+					.search {
+						margin-right: 20px;
+						input {
+							height: 40px;
+							padding: 6px 18px;
+							border-radius: 5px 0 0 5px;
+							font-size: 16px;
+						}
+						button {
+							height: 40px;
+							border-radius: 0 5px 5px 0;
+							font-size: 16px;
+						}
+					}
+					.sort {
+						margin-right: 20px;
+						.ant-select {
+							min-width: 160px;
+							.ant-select-selector {
+								border-radius: 5px;
+								height: 40px;
+								padding: 4px 18px;
+								font-size: 16px;
+								text-transform: capitalize;
+								input {
+									height: 40px;
+									font-size: 16px;
+								}
+							}
+						}
+					}
+					.add {
+						button {
+							height: 40px;
+							border-radius: 5px;
+							font-size: 16px;
+							text-transform: capitalize;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+.ant-select-dropdown {
+	.ant-select-item {
+		font-size: 16px;
+		padding: 6px 12px;
+	}
+}

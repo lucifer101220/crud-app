@@ -33,7 +33,7 @@ export type AuthenticationState = Readonly<typeof initialState>;
 
 export default (
   state: AuthenticationState = initialState,
-  action: IndexedObject,
+  action: IndexedObject
 ): AuthenticationState => {
   switch (action.type) {
     case REQUEST(ACTION_TYPES.LOGIN):
