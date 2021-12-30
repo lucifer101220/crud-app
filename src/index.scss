@@ -25,7 +25,7 @@ footer, header, hgroup, menu, nav, section {
 }
 body {
 	line-height: 1;
-  	font-family: 'Poppins', sans-serif;
+	font-family: 'Poppins', sans-serif;
 }
 ol, ul {
 	list-style: none;
@@ -67,14 +67,23 @@ img {
 				.page_actions {
 					display: flex;
 					align-items: center;
+					>div {
+						margin-left: 20px;
+						margin-bottom: 0;
+						button {
+							min-width: 46px;
+						}
+					}
 					.search {
-						margin-right: 20px;
 						input {
 							height: 40px;
 							padding: 6px 18px;
 							border-radius: 5px 0 0 5px;
 							font-size: 16px;
 						}
+					}
+					.finish_form {
+						margin-left: 0;
 						button {
 							height: 40px;
 							border-radius: 0 5px 5px 0;
@@ -82,9 +91,8 @@ img {
 						}
 					}
 					.sort {
-						margin-right: 20px;
 						.ant-select {
-							min-width: 160px;
+							min-width: 200px;
 							.ant-select-selector {
 								border-radius: 5px;
 								height: 40px;
@@ -98,7 +106,7 @@ img {
 							}
 						}
 					}
-					.add {
+					.add, .reload {
 						button {
 							height: 40px;
 							border-radius: 5px;

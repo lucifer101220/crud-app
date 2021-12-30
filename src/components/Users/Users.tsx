@@ -1,68 +1,194 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { AppState } from '../../reducer';
-import { getAllUsers, deleteUser } from '../../reducer/usersReducer';
+import { getAllUsers, deleteUser, createUser, editUser } from '../../reducer/usersReducer';
 import { User } from '../../type/users';
 import { IndexedObject } from '../../utils/type';
-import { Card, Avatar, Image, Skeleton, Input, Select, Button, notification } from 'antd';
+import {
+  Card,
+  Avatar,
+  Image,
+  Skeleton,
+  Input,
+  Select,
+  Button,
+  Form,
+  Modal,
+  Pagination,
+  Popconfirm,
+} from 'antd';
 import {
   InfoCircleOutlined,
   FormOutlined,
   DeleteOutlined,
   UserAddOutlined,
-  SmileOutlined,
-  FrownOutlined,
+  SyncOutlined,
+  SearchOutlined,
+  ClockCircleOutlined,
 } from '@ant-design/icons';
 import './Users.scss';
 import { Params } from '../../application/config/axios-interceptor';
+import UserForm from './UserForm';
+import NoImage from '../../images/no-img.jpg';
+import moment from 'moment';
+import { PAGE_SIZE_USERS } from '../../api/usersApi';
 
 const { Meta } = Card;
-const { Search } = Input;
 const { Option } = Select;
+const onParams = (sortBy: string, order: string, search?: string) => {
+  if (search) {
+    return {
+      sortBy,
+      order,
+      search,
+    };
+  } else
+    return {
+      sortBy,
+      order,
+    };
+};
 
 const Users: React.FC<IndexedObject> = (props) => {
+  type FormActions = {
+    search: string;
+    sort: string | undefined;
+  };
+
   const { usersList, totalUsers, loading } = props;
+  const [formActions] = Form.useForm();
+  const [formAdd] = Form.useForm();
+  const [formEdit] = Form.useForm();
+  const [showModalAdd, setShowModalAdd] = useState<boolean>(false);
+  const [showModalEdit, setShowModalEdit] = useState<boolean>(false);
+  const [page, setPage] = useState<number>(1);
 
   useEffect(() => {
     props.getAllUsers();
   }, []);
 
-  const onSearch = (value: string) => {
-    if (value) {
-      const params: Params = {
-        search: value,
-      };
-      props.getAllUsers(params);
-    } else props.getAllUsers();
+  const onSearchAndSort = (search: string, sort: string) => {
+    switch (sort) {
+      case 'nameasc': {
+        props.getAllUsers(onParams('name', 'asc', search));
+        break;
+      }
+      case 'namedesc': {
+        props.getAllUsers(onParams('name', 'desc', search));
+        break;
+      }
+      case 'created_latest': {
+        props.getAllUsers(onParams('created_at', 'desc', search));
+        break;
+      }
+      case 'created_oldest': {
+        props.getAllUsers(onParams('created_at', 'asc', search));
+        break;
+      }
+    }
+  };
+
+  const onSearch = (values: FormActions) => {
+    if (!values.search && !values.sort) {
+      props.getAllUsers();
+    } else {
+      if (values.search && !values.sort) {
+        const params: Params = {
+          search: values.search,
+        };
+        props.getAllUsers(params);
+      }
+      if (values.search && values.sort) {
+        onSearchAndSort(values.search, values.sort);
+      }
+    }
   };
 
   const onSort = (value: string) => {
+    const valueSearch = formActions.getFieldValue('search');
     if (value) {
-      switch (value) {
+      if (valueSearch) {
+        onSearchAndSort(valueSearch, value);
+      } else {
+        switch (value) {
+          case 'nameasc': {
+            props.getAllUsers(onParams('name', 'asc'));
+            break;
+          }
+          case 'namedesc': {
+            props.getAllUsers(onParams('name', 'desc'));
+            break;
+          }
+          case 'created_latest': {
+            props.getAllUsers(onParams('created_at', 'desc'));
+            break;
+          }
+          case 'created_oldest': {
+            props.getAllUsers(onParams('created_at', 'asc'));
+            break;
+          }
+        }
+      }
+    } else {
+      if (valueSearch) {
+        props.getAllUsers({ search: valueSearch });
+      } else props.getAllUsers();
+    }
+  };
+
+  const onFinishAdd = useCallback((values: User) => {
+    const data = {
+      ...values,
+      created_at: Date.now(),
+    };
+    props.createUser(data);
+    setShowModalAdd(false);
+    formAdd.resetFields();
+  }, []);
+
+  const handleEdit = (user: User) => {
+    formEdit.setFieldsValue(user);
+    setShowModalEdit(true);
+  };
+
+  const onFinishEdit = useCallback((values: User) => {
+    const data = {
+      ...values,
+      created_at: Date.now(),
+    };
+    props.editUser(data);
+    setShowModalEdit(false);
+    formEdit.resetFields();
+  }, []);
+
+  const onChangePage = (page: number, pageSize: number) => {
+    setPage(page);
+    const sortValue = formActions.getFieldValue('sort');
+    const searchValue = formActions.getFieldValue('search');
+    const paramsPage = { page: page };
+    if (sortValue) {
+      switch (sortValue) {
         case 'nameasc': {
-          const params = { sortBy: 'name', order: 'asc' };
-          props.getAllUsers(params);
+          props.getAllUsers({ ...onParams('name', 'asc', searchValue), ...paramsPage });
           break;
         }
         case 'namedesc': {
-          const params = { sortBy: 'name', order: 'desc' };
-          props.getAllUsers(params);
+          props.getAllUsers({ ...onParams('name', 'desc', searchValue), ...paramsPage });
           break;
         }
-        case 'latest': {
-          const params = { sortBy: 'created_at', order: 'desc' };
-          props.getAllUsers(params);
+        case 'created_latest': {
+          props.getAllUsers({ ...onParams('created_at', 'desc', searchValue), ...paramsPage });
           break;
         }
-        case 'oldest': {
-          const params = { sortBy: 'created_at', order: 'asc' };
-          props.getAllUsers(params);
+        case 'created_oldest': {
+          props.getAllUsers({ ...onParams('created_at', 'asc', searchValue), ...paramsPage });
           break;
         }
       }
-    } else props.getAllUsers();
+    } else {
+      props.getAllUsers({ search: searchValue, ...paramsPage });
+    }
   };
-  console.log(usersList);
 
   return (
     <div className="page users_page">
@@ -72,36 +198,60 @@ const Users: React.FC<IndexedObject> = (props) => {
             Total users : <span>{totalUsers}</span>
           </p>
         </div>
-        <div className="page_actions">
-          <div className="sort">
+        <Form form={formActions} className="page_actions" name="form_actions" onFinish={onSearch}>
+          <Form.Item className="sort" name="sort">
             <Select
               placeholder="Sort users"
               allowClear
-              disabled={usersList.length === 0}
+              disabled={totalUsers === 0}
               loading={loading}
               onChange={onSort}
             >
               <Option value="nameasc">Name Asc</Option>
               <Option value="namedesc">Name Desc</Option>
-              <Option value="latest">Latest</Option>
-              <Option value="oldest">Oldest</Option>
+              <Option value="created_latest">Created Latest</Option>
+              <Option value="created_oldest">Created Oldest</Option>
             </Select>
-          </div>
-          <div className="search">
-            <Search
-              placeholder="Please enter text..."
-              onSearch={onSearch}
-              enterButton
+          </Form.Item>
+          <Form.Item className="search" name="search">
+            <Input placeholder="Please enter text..." />
+          </Form.Item>
+          <Form.Item className="finish_form">
+            <Button type="primary" icon={<SearchOutlined />} loading={loading} htmlType="submit" />
+          </Form.Item>
+          <div className="reload">
+            <Button
+              type="primary"
+              icon={<SyncOutlined />}
               loading={loading}
-              disabled={usersList.length === 0}
+              onClick={() => {
+                formActions.resetFields();
+                props.getAllUsers();
+              }}
             />
           </div>
           <div className="add">
-            <Button type="primary" icon={<UserAddOutlined />} loading={loading}>
+            <Button
+              type="primary"
+              icon={<UserAddOutlined />}
+              loading={loading}
+              onClick={() => setShowModalAdd(true)}
+            >
               Add user
             </Button>
+            <Modal
+              title="Add new user"
+              destroyOnClose
+              centered
+              visible={showModalAdd}
+              footer={false}
+              width={800}
+              onCancel={() => setShowModalAdd(false)}
+            >
+              <UserForm onFinish={onFinishAdd} form={formAdd} />
+            </Modal>
           </div>
-        </div>
+        </Form>
       </div>
       <div className="users_list">
         {loading ? (
@@ -131,19 +281,27 @@ const Users: React.FC<IndexedObject> = (props) => {
                 cover={
                   <Image
                     alt={user.name}
-                    src={`https://picsum.photos/id/${user.image_id}/600/300`}
-                    fallback="https://picsum.photos/id/1062/800/400"
+                    src={`https://picsum.photos/id/${user.image_id}/800/400`}
+                    fallback={NoImage}
                   />
                 }
                 actions={[
-                  <InfoCircleOutlined key="setting" />,
-                  <FormOutlined key="edit" />,
+                  <Popconfirm
+                    key="setting"
+                    showCancel={false}
+                    icon={<ClockCircleOutlined />}
+                    title={moment(new Date(Number(user.created_at))).format('LLL')}
+                  >
+                    <InfoCircleOutlined />
+                  </Popconfirm>,
+                  <FormOutlined key="edit" onClick={() => handleEdit(user)} />,
                   <DeleteOutlined key="ellipsis" onClick={() => props.deleteUser(user.id)} />,
                 ]}
               >
                 <Meta
                   avatar={
                     <Avatar
+                      size={38}
                       src={`https://picsum.photos/id/${user.avatar_id}/60/60`}
                       onError={() => true}
                     />
@@ -161,6 +319,27 @@ const Users: React.FC<IndexedObject> = (props) => {
           ))
         )}
       </div>
+      <div className="pagination">
+        <Pagination
+          current={page}
+          pageSize={PAGE_SIZE_USERS}
+          total={totalUsers}
+          showSizeChanger={false}
+          hideOnSinglePage
+          onChange={onChangePage}
+        />
+      </div>
+      <Modal
+        title="Edit user"
+        destroyOnClose
+        centered
+        visible={showModalEdit}
+        footer={false}
+        width={800}
+        onCancel={() => setShowModalEdit(false)}
+      >
+        <UserForm onFinish={onFinishEdit} form={formEdit} isEditForm={true} />
+      </Modal>
     </div>
   );
 };
@@ -171,6 +350,6 @@ const mapStateToProps = ({ users }: AppState) => ({
   loading: users.loading,
 });
 
-const mapDispatchToProps = { getAllUsers, deleteUser };
+const mapDispatchToProps = { getAllUsers, deleteUser, createUser, editUser };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Users);

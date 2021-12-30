@@ -101,10 +101,8 @@ const Routes: React.FC<IndexedObject> = () => {
                 fallback={<div>Loading...</div>}
               />
             ))}
-            {/* <Route exact path="/" component={WelcomePage} />
             <PublicRoute exact path="/login" component={LoginPage} />
             <PublicRoute exact path="/register" component={RegisterPage} />
-            <PrivateRoute exact path="/home" component={Home} /> */}
             <Route component={NoMatch} />
           </Switch>
         </div>

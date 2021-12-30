@@ -1,5 +1,6 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import queryString from 'query-string';
+import { notificationUsers } from '../../components/notification';
 import { Func } from '../../type/types';
 import { IndexedObject } from '../../utils/type';
 
@@ -35,6 +36,9 @@ const setupAxiosInterceptors = (onUnauthenticated: Func) => {
   };
   const onResponseError = (err: IndexedObject) => {
     const status = err.status || (err.response ? err.response.status : 0);
+    if (status !== 200 || status !== 201) {
+      notificationUsers('Request failure !', 'frown');
+    }
     if (status === 403 || status === 401) {
       onUnauthenticated();
     }

@@ -38,9 +38,103 @@
                 .ant-card-actions {
                     li {
                         margin: 8px 0;
+                        font-weight: 500;
+                        .anticon-info-circle {
+                            color: #0098a3;
+                        }
+                        .anticon-form {
+                            color: #1890ff;
+                        }
+                        .anticon-delete {
+                            color: #ec0511;
+                        }
                     }
                 }
             }
+        }
+    }
+    .pagination {
+        padding: 20px 10px 10px;
+        .ant-pagination {
+            text-align: right;
+            li, button {
+                border-radius: 5px;
+                min-width: 40px;
+                height: 40px;
+                line-height: 38px;
+                font-size: 18px;
+            }
+            button {
+                font-size: 14px;
+            }
+        }
+    }
+}
+
+.ant-modal {
+    .ant-modal-content {
+        border-radius: 6px;
+        .ant-modal-header {
+            border-radius: 6px 6px 0 0;
+        }
+        .ant-modal-body {
+            border-radius: 0 0 6px 6px;
+            .ant-form {
+                .ant-form-item {
+                    margin-bottom: 24px;
+                    input, button {
+                        border-radius: 5px;
+                    }
+                    &:last-child {
+                        margin-bottom: 0;
+                        text-align: right;
+                        button {
+                            height: 34px;
+                            font-size: 15px;
+                            text-transform: capitalize;
+                        }
+                    }
+                    &.image, &.avatar {
+                        display: inline-flex;
+                        flex-flow: column wrap;
+                        .ant-form-item-label {
+                            text-align: left;
+                        }
+                    }
+                    &.image {
+                        margin-right: 80px;
+                        img {
+                            width: 400px;
+                            border-radius: 5px;
+                        }
+                    }
+                    &.avatar {
+                        img {
+                            width: 200px;
+                            border-radius: 50%;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+.ant-popover {
+    .ant-popover-inner {
+        border-radius: 5px;
+        .ant-popover-message {
+            padding: 0;
+            display: flex;
+            align-items: center;
+            .anticon {
+                color: #0098a3;
+                font-size: 16px;
+                top: 3px;
+            }
+        }
+        .ant-popover-buttons {
+            display: none;
         }
     }
 }

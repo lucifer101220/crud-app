@@ -1,6 +1,7 @@
-import usersApi from '../api/usersApi';
-// import { notificationUsers } from '../components/Users/Users';
-import { ICrudDeleteAction, ICrudGetAllAction } from '../type/redux-action';
+import usersApi, { PAGE_SIZE_USERS } from '../api/usersApi';
+import { Params } from '../application/config/axios-interceptor';
+import { notificationUsers } from '../components/notification';
+import { ICrudDeleteAction, ICrudGetAllAction, ICrudPutAction } from '../type/redux-action';
 import { User } from '../type/users';
 import { IndexedObject } from '../utils/type';
 import { FAILURE, REQUEST, SUCCESS } from './action-type.util';
@@ -34,8 +35,8 @@ const usersReducer = (state = initialState, action: IndexedObject): UsersState =
       return {
         ...state,
         loading: false,
-        usersList: action.payload,
-        totalUsers: action.payload.length,
+        usersList: action.payload.data,
+        totalUsers: action.payload.count,
       };
     case FAILURE(ACTION_TYPES.GET_USERS):
       return {
@@ -48,11 +49,17 @@ const usersReducer = (state = initialState, action: IndexedObject): UsersState =
   }
 };
 
-export const getAllUsers: ICrudGetAllAction<User> = (params) => async (dispatch: any) => {
+export const getAllUsers: ICrudGetAllAction<Params> = (params) => async (dispatch: any) => {
   try {
     return await dispatch({
       type: ACTION_TYPES.GET_USERS,
-      payload: usersApi.getAll(params),
+      payload: usersApi.getAll({
+        sortBy: params && params.sortBy ? params.sortBy : 'created_at',
+        order: params && params.order ? params.order : 'desc',
+        search: params && params.search ? params.search : undefined,
+        page: params && params.page ? params.page : 1,
+        limit: PAGE_SIZE_USERS,
+      }),
     });
   } catch (e) {
     return null;
@@ -61,14 +68,35 @@ export const getAllUsers: ICrudGetAllAction<User> = (params) => async (dispatch:
 
 export const deleteUser: ICrudDeleteAction<User> = (id) => async (dispatch: any) => {
   try {
-    const resDelete = await usersApi.delete(id);
-    // if (resDelete && resDelete.id) {
-    //   notificationUsers(`Delete ${resDelete.name} successfully !`, 'frown');
-    // } else notificationUsers('Delete failure !');
-    return await dispatch({
-      type: ACTION_TYPES.GET_USERS,
-      payload: usersApi.getAll(),
-    });
+    const res = await usersApi.delete(id);
+    if (res && res.id) {
+      notificationUsers(`Delete '${res.name}' successfully !`);
+    } else notificationUsers('Delete failure !', 'frown');
+    return await dispatch(getAllUsers());
+  } catch (e) {
+    return null;
+  }
+};
+
+export const createUser: ICrudPutAction<User> = (data) => async (dispatch: any) => {
+  try {
+    const res = await usersApi.create(data);
+    if (res && res.id) {
+      notificationUsers(`Create '${res.name}' successfully !`);
+    } else notificationUsers('Create failure !', 'frown');
+    return await dispatch(getAllUsers());
+  } catch (e) {
+    return null;
+  }
+};
+
+export const editUser: ICrudPutAction<User> = (data) => async (dispatch: any) => {
+  try {
+    const res = await usersApi.edit(data);
+    if (res && res.id) {
+      notificationUsers(`Update '${res.name}' successfully !`);
+    } else notificationUsers('Update failure !', 'frown');
+    return await dispatch(getAllUsers());
   } catch (e) {
     return null;
   }
