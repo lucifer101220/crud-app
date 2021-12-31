@@ -10,7 +10,7 @@ interface Props extends RouteProps {
 
 const PrivateRoute: FC<Props> = ({ component: Component, fallback: Fallback, ...rest }) => {
   const { isAuthenticated } = useSelector(authSelector.authentication);
-  console.log('PRIVATE ROUTE ' + isAuthenticated);
+
   if (isAuthenticated) {
     return (
       <Route

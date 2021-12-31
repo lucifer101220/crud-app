@@ -1,7 +1,7 @@
 import { SmileOutlined, FrownOutlined } from '@ant-design/icons';
 import { notification } from 'antd';
 
-export const notificationUsers = (message: string, type?: string): void => {
+export const notificationApp = (message: string, type?: string): void => {
   notification.open({
     message: message,
     icon:

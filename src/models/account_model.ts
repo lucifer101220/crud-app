@@ -1,5 +1,5 @@
 export interface IAccount {
-  id?: number;
+  id?: number | string;
   login?: string;
   firstName?: string;
   lastName?: string;
@@ -12,6 +12,11 @@ export interface IAccount {
   lastModifiedBy?: string;
   lastModifiedDate?: Date;
   authorities?: string[];
+
+  name?: string;
+  phone?: number | string | null;
+  token?: string;
+  password?: string;
 }
 
 export const defaultValue: Readonly<IAccount> = {};

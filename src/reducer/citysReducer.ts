@@ -1,44 +1,44 @@
-import usersApi, { PAGE_SIZE_USERS } from '../api/usersApi';
+import citysApi from '../api/citysApi';
 import { Params } from '../application/config/axios-interceptor';
 import { notificationApp } from '../components/notification';
 import { ICrudDeleteAction, ICrudGetAllAction, ICrudPutAction } from '../type/redux-action';
-import { User } from '../type/type';
+import { City } from '../type/type';
 import { IndexedObject } from '../utils/type';
 import { FAILURE, REQUEST, SUCCESS } from './action-type.util';
 
 const ACTION_TYPES = {
-  GET_USERS: 'users/GET_USERS',
+  GET_CITYS: 'citys/GET_CITYS',
 };
 
-export type UsersState = {
+export type CitysState = {
   loading: boolean;
   error: IndexedObject | null;
-  usersList: User[];
-  totalUsers: number;
+  citysList: City[];
+  totalCitys: number;
 };
 
-const initialState: UsersState = {
+const initialState: CitysState = {
   loading: false,
   error: null,
-  usersList: [],
-  totalUsers: 0,
+  citysList: [],
+  totalCitys: 0,
 };
 
-const usersReducer = (state = initialState, action: IndexedObject): UsersState => {
+const citysReducer = (state = initialState, action: IndexedObject): CitysState => {
   switch (action.type) {
-    case REQUEST(ACTION_TYPES.GET_USERS):
+    case REQUEST(ACTION_TYPES.GET_CITYS):
       return {
         ...state,
         loading: true,
       };
-    case SUCCESS(ACTION_TYPES.GET_USERS):
+    case SUCCESS(ACTION_TYPES.GET_CITYS):
       return {
         ...state,
         loading: false,
-        usersList: action.payload.data,
-        totalUsers: action.payload.count,
+        citysList: action.payload.data,
+        totalCitys: action.payload.count,
       };
-    case FAILURE(ACTION_TYPES.GET_USERS):
+    case FAILURE(ACTION_TYPES.GET_CITYS):
       return {
         ...state,
         loading: false,
@@ -49,16 +49,14 @@ const usersReducer = (state = initialState, action: IndexedObject): UsersState =
   }
 };
 
-export const getAllUsers: ICrudGetAllAction<Params> = (params) => async (dispatch: any) => {
+export const getAllCitys: ICrudGetAllAction<Params> = (params) => async (dispatch: any) => {
   try {
     return await dispatch({
-      type: ACTION_TYPES.GET_USERS,
-      payload: usersApi.getAll({
+      type: ACTION_TYPES.GET_CITYS,
+      payload: citysApi.getAll({
         sortBy: params && params.sortBy ? params.sortBy : 'created_at',
         order: params && params.order ? params.order : 'desc',
         search: params && params.search ? params.search : undefined,
-        page: params && params.page ? params.page : 1,
-        limit: PAGE_SIZE_USERS,
       }),
     });
   } catch (e) {
@@ -66,40 +64,40 @@ export const getAllUsers: ICrudGetAllAction<Params> = (params) => async (dispatc
   }
 };
 
-export const deleteUser: ICrudDeleteAction<User> = (id) => async (dispatch: any) => {
+export const deleteCity: ICrudDeleteAction<City> = (id) => async (dispatch: any) => {
   try {
-    const res = await usersApi.delete(id);
+    const res = await citysApi.delete(id);
     if (res && res.id) {
       notificationApp(`Delete '${res.name}' successfully !`);
     } else notificationApp('Delete failure !', 'frown');
-    return await dispatch(getAllUsers());
+    return await dispatch(getAllCitys());
   } catch (e) {
     return null;
   }
 };
 
-export const createUser: ICrudPutAction<User> = (data) => async (dispatch: any) => {
+export const createCity: ICrudPutAction<City> = (data) => async (dispatch: any) => {
   try {
-    const res = await usersApi.create(data);
+    const res = await citysApi.create(data);
     if (res && res.id) {
       notificationApp(`Create '${res.name}' successfully !`);
     } else notificationApp('Create failure !', 'frown');
-    return await dispatch(getAllUsers());
+    return await dispatch(getAllCitys());
   } catch (e) {
     return null;
   }
 };
 
-export const editUser: ICrudPutAction<User> = (data) => async (dispatch: any) => {
+export const editCity: ICrudPutAction<City> = (data) => async (dispatch: any) => {
   try {
-    const res = await usersApi.edit(data);
+    const res = await citysApi.edit(data);
     if (res && res.id) {
       notificationApp(`Update '${res.name}' successfully !`);
     } else notificationApp('Update failure !', 'frown');
-    return await dispatch(getAllUsers());
+    return await dispatch(getAllCitys());
   } catch (e) {
     return null;
   }
 };
 
-export default usersReducer;
+export default citysReducer;

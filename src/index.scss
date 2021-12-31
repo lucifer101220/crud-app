@@ -47,6 +47,58 @@ img {
 	max-height: 100%;
 }
 
+/* Selection Text */
+::selection {
+    background: #018188;
+    color: #fff;
+}
+::-moz-selection {
+    background: #018188;
+    color: #fff;
+} 
+::-webkit-selection {
+    background: #018188;
+    color: #fff;
+}
+
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {         //hidden arrow input number
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {          //hidden arrow input number
+  -moz-appearance: textfield;
+}
+
+/* Sroll Y Custom */
+::-webkit-scrollbar{
+	-webkit-appearance: none;
+}
+
+::-webkit-scrollbar:vertical{
+width: 8px;
+}
+
+::-webkit-scrollbar-track:vertical {
+	background: #f4f7fa; 
+}
+
+::-webkit-scrollbar-thumb:vertical{
+background: linear-gradient(transparent,#06a2aa);
+border-radius: 12px;
+}
+::-webkit-scrollbar-thumb:vertical:hover{
+background: linear-gradient(transparent,#06a2aa);
+}
+
+.anticon {
+    vertical-align: middle!important;
+}
+
 .ant-layout {
 	.site-layout-background {
 		.page {
@@ -115,6 +167,23 @@ img {
 						}
 					}
 				}
+			}
+		}
+	}
+	&.layout_auth {
+		.ant-layout-header, .ant-layout-footer, .ant-breadcrumb {
+			display: none!important;
+		}
+		.site-layout {
+			margin: 0!important;
+			padding: 0!important;
+			width: 100vw!important;
+			height: 100vh!important;
+			.site-layout-background {
+				margin: 0!important;
+				padding: 0!important;
+				width: 100%!important;
+				height: 100%!important;
 			}
 		}
 	}

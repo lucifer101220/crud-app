@@ -9,12 +9,16 @@ import fliRegisterReducer, { RegisterState } from './registerReducer';
 import langReducer, { LangState } from './languageReducer';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import usersReducer, { UsersState } from './usersReducer';
+import citysReducer, { CitysState } from './citysReducer';
+import accountsReducer, { AccountsState } from './accountsReducer';
 
 export type AppState = {
   authentication: AuthenticationState;
   register: RegisterState;
   language: LangState;
   users: UsersState;
+  accounts: AccountsState;
+  citys: CitysState;
 };
 
 const defaultMiddlewares = [thunkMiddleware, errorMiddleware, promiseMiddleware, loggerMiddleware];
@@ -26,6 +30,8 @@ const rootReducer = combineReducers<AppState>({
   register: fliRegisterReducer,
   language: langReducer,
   users: usersReducer,
+  accounts: accountsReducer,
+  citys: citysReducer,
 });
 
 const loadState = () => {

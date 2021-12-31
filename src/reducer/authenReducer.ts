@@ -4,6 +4,8 @@ import { IndexedObject } from '../utils/type';
 import { FAILURE, REQUEST, SUCCESS } from './action-type.util';
 import { AUTH_TOKEN_KEY } from '../shared/constant/constant';
 import { IAccount } from '../models/account_model';
+import { IPayload } from '../type/redux-action';
+import { notificationApp } from '../components/notification';
 
 export const ACTION_TYPES = {
   LOGIN: 'authentication/LOGIN',
@@ -17,14 +19,14 @@ const initialState = {
   loading: false,
   isAuthenticated: false,
   loginSuccess: false,
-  loginError: false, // Errors returned from server side
-  showModalLogin: false,
   account: {} as IAccount,
+  loginError: false, // Errors returned from server side
+  // showModalLogin: false,
   errorMessage: null, // Errors returned from server side
-  redirectMessage: null,
-  sessionHasBeenFetched: false,
-  idToken: null,
-  logoutUrl: null,
+  // redirectMessage: null,
+  // sessionHasBeenFetched: false,
+  idToken: '',
+  // logoutUrl: null,
 };
 
 export type AuthenticationState = Readonly<typeof initialState>;
@@ -46,7 +48,7 @@ export default (
       return {
         ...initialState,
         errorMessage: action.payload,
-        showModalLogin: true,
+        // showModalLogin: true,
         loginError: true,
       };
     case FAILURE(ACTION_TYPES.GET_SESSION):
@@ -54,8 +56,8 @@ export default (
         ...state,
         loading: false,
         isAuthenticated: false,
-        sessionHasBeenFetched: true,
-        showModalLogin: true,
+        // sessionHasBeenFetched: true,
+        // showModalLogin: true,
         errorMessage: action.payload,
       };
     case SUCCESS(ACTION_TYPES.LOGIN):
@@ -63,15 +65,21 @@ export default (
         ...state,
         loading: false,
         loginError: false,
-        showModalLogin: false,
+        // showModalLogin: false,
         loginSuccess: true,
         //TODO: Hard code
         isAuthenticated: true,
+        account: action.payload,
+        idToken: action.payload.token,
       };
     case ACTION_TYPES.LOGOUT:
       return {
         ...initialState,
-        showModalLogin: true,
+        loading: false,
+        loginError: false,
+        loginSuccess: true,
+        account: {},
+        idToken: '',
         isAuthenticated: false,
       };
     case SUCCESS(ACTION_TYPES.GET_SESSION): {
@@ -81,27 +89,32 @@ export default (
         ...state,
         isAuthenticated,
         loading: false,
-        sessionHasBeenFetched: true,
+        // sessionHasBeenFetched: true,
         account: action.payload.data,
       };
     }
     case ACTION_TYPES.ERROR_MESSAGE:
       return {
         ...initialState,
-        showModalLogin: true,
-        redirectMessage: action.message,
+        // showModalLogin: true,
+        // redirectMessage: action.message,
       };
     case ACTION_TYPES.CLEAR_AUTH:
       return {
         ...state,
         loading: false,
-        showModalLogin: true,
+        // showModalLogin: true,
         isAuthenticated: false,
       };
     default:
       return state;
   }
 };
+
+export const loginFirebaseSuccess = (response: IAccount): any => ({
+  type: SUCCESS(ACTION_TYPES.LOGIN),
+  payload: response,
+});
 
 export const getSession: () => void = () => (dispatch: any) => {
   dispatch({
@@ -124,6 +137,7 @@ export const logout: () => void = () => (dispatch: any) => {
   dispatch({
     type: ACTION_TYPES.LOGOUT,
   });
+  notificationApp('Log out successfully !');
 };
 
 export const displayAuthError = (message: string) => ({

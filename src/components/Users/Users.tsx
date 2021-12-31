@@ -2,8 +2,9 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { AppState } from '../../reducer';
 import { getAllUsers, deleteUser, createUser, editUser } from '../../reducer/usersReducer';
-import { User } from '../../type/users';
+import { User } from '../../type/type';
 import { IndexedObject } from '../../utils/type';
+import { Helmet } from 'react-helmet';
 import {
   Card,
   Avatar,
@@ -192,16 +193,19 @@ const Users: React.FC<IndexedObject> = (props) => {
 
   return (
     <div className="page users_page">
+      <Helmet>
+        <title>People</title>
+      </Helmet>
       <div className="page_header">
         <div className="total_items">
           <p>
-            Total users : <span>{totalUsers}</span>
+            Total people : <span>{totalUsers}</span>
           </p>
         </div>
         <Form form={formActions} className="page_actions" name="form_actions" onFinish={onSearch}>
           <Form.Item className="sort" name="sort">
             <Select
-              placeholder="Sort users"
+              placeholder="Sort people"
               allowClear
               disabled={totalUsers === 0}
               loading={loading}
@@ -237,10 +241,10 @@ const Users: React.FC<IndexedObject> = (props) => {
               loading={loading}
               onClick={() => setShowModalAdd(true)}
             >
-              Add user
+              Add people
             </Button>
             <Modal
-              title="Add new user"
+              title="Add new people"
               destroyOnClose
               centered
               visible={showModalAdd}
@@ -330,7 +334,7 @@ const Users: React.FC<IndexedObject> = (props) => {
         />
       </div>
       <Modal
-        title="Edit user"
+        title="Edit people"
         destroyOnClose
         centered
         visible={showModalEdit}

@@ -1,102 +1,137 @@
-import * as React from 'react';
+import React from 'react';
+import { Button, Checkbox, Form, Input, InputNumber } from 'antd';
+import {
+  MailOutlined,
+  LockOutlined,
+  ArrowRightOutlined,
+  FireOutlined,
+  PhoneOutlined,
+  GitlabOutlined,
+} from '@ant-design/icons';
 import { IndexedObject } from '../utils/type';
-import { RouteComponentProps, useHistory } from 'react-router-dom';
+import { Link, RouteComponentProps, useHistory } from 'react-router-dom';
 import { connect, useSelector } from 'react-redux';
+import './auth.scss';
 import { createEntity, reset } from '../reducer/registerReducer';
 import { AppState } from '../reducer';
 import { omit } from '../utils/object';
 import { IRegisterModel } from '../models/register_model';
 import { useState } from 'react';
+import { publicUrl } from '../utils/common';
+import { getAllAccounts, createAccount } from '../reducer/accountsReducer';
+import { notificationApp } from './notification';
+import { Helmet } from 'react-helmet';
 
 export interface IRegisterProps
   extends StateProps,
     DispatchProps,
     RouteComponentProps<IndexedObject> {}
 
+type RegisterForm = {
+  email: string;
+  password: string;
+  name: string;
+  phone: string;
+};
 const RegisterPage: React.FC<IRegisterProps> = (props) => {
-  const [state, setState] = useState({
-    fullName: '',
-    email: '',
-    password: '',
-    errors: [] as string[],
-  });
-  const { updating, updateSuccess, showModel } = props;
+  const [formRegister] = Form.useForm();
   const history = useHistory();
-
-  const hasError = (key: string) => {
-    return state.errors.indexOf(key) !== -1;
+  const validateMessages = {
+    required: '${label} is required!',
+    types: {
+      string: '${label} is not a valid string!',
+      email: '${label} is not a valid email!',
+    },
   };
 
-  const close = () => {
-    props.reset();
-  };
-
-  const handleOk = () => {
-    close();
-    if (updateSuccess) {
-      history.push('/login');
-    }
-  };
-
-  const changeHandler = (event: IndexedObject) => {
-    setState({ ...state, [event.target.name]: event.target.value });
-  };
-
-  const saveEntity = (event: IndexedObject) => {
-    event.preventDefault();
-    //VALIDATE
-    const errors: string[] = [];
-
-    //firstname
-    if (state.fullName === '') {
-      errors.push('fullName');
-    }
-
-    //email
-    const expression = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
-    const validEmail = expression.test(String(state.email).toLowerCase());
-
-    if (!validEmail) {
-      errors.push('email');
-    }
-
-    //email
-    if (state.password.length <= 0 || state.password.length >= 20) {
-      errors.push('password');
-    }
-
-    setState({
-      ...state,
-      errors: errors,
-    });
-
-    if (errors.length > 0) {
-      return false;
+  const onRegister = (values: RegisterForm) => {
+    if (props.accountsList.find((acc) => acc.email === values.email)) {
+      notificationApp('Email already exists !', 'frown');
     } else {
-      const entity = {
-        ...omit('errors', state),
-        login: state.email,
-      } as IRegisterModel;
-      props.createEntity(entity);
+      const data = {
+        ...values,
+        token: `token${values.email}`,
+        created_at: Date.now(),
+      };
+      props.createAccount(data);
+      setTimeout(() => {
+        history.push('/login');
+      }, 900);
     }
   };
 
   return (
-    <div className="Article">
-      <div>
-        <h1>Register Page</h1>
+    <div className="page auth_page register_page">
+      <Helmet>
+        <title>Register</title>
+      </Helmet>
+      <div className="auth_card">
+        <div className="auth_card_left">
+          <img src={publicUrl('/images/register.jpg')} alt="auth" />
+        </div>
+        <div className="auth_card_right">
+          <h3>- Sign Up -</h3>
+          <Form
+            name="register_form"
+            className="register-form"
+            form={formRegister}
+            onFinish={onRegister}
+            validateMessages={validateMessages}
+          >
+            <Form.Item name="name" rules={[{ required: true }, { type: 'string' }]}>
+              <Input
+                prefix={<GitlabOutlined className="site-form-item-icon" />}
+                placeholder="Name"
+              />
+            </Form.Item>
+            <Form.Item name="phone" rules={[{ required: true }, { type: 'string' }]}>
+              <Input
+                prefix={<PhoneOutlined className="site-form-item-icon" />}
+                placeholder="Phone"
+              />
+            </Form.Item>
+            <Form.Item name="email" rules={[{ required: true }, { type: 'email' }]}>
+              <Input
+                prefix={<MailOutlined className="site-form-item-icon" />}
+                placeholder="Email"
+              />
+            </Form.Item>
+            <Form.Item name="password" rules={[{ required: true }, { type: 'string' }]}>
+              <Input.Password
+                prefix={<LockOutlined className="site-form-item-icon" />}
+                type="password"
+                placeholder="Password"
+              />
+            </Form.Item>
+            <Form.Item className="remember">
+              <Form.Item noStyle>Do you already have an account ?</Form.Item>
+              <Link to="/login" className="register-form-forgot">
+                Sign in <ArrowRightOutlined />
+              </Link>
+            </Form.Item>
+            <Form.Item>
+              <Button
+                loading={props.loading}
+                type="primary"
+                htmlType="submit"
+                className="register-form-button"
+              >
+                <FireOutlined /> Sign up
+              </Button>
+            </Form.Item>
+          </Form>
+        </div>
       </div>
     </div>
   );
 };
 
-const mapStateToProps = ({ register }: AppState) => ({
-  updating: register.updating,
-  updateSuccess: register.updateSuccess,
-  showModel: register.showModel,
+const mapStateToProps = ({ accounts }: AppState) => ({
+  accountsList: accounts.accountsList,
+  loading: accounts.loading,
 });
 
-const mapDispatchToProps = { createEntity, reset };
+const mapDispatchToProps = { createAccount };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;

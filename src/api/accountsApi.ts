@@ -1,27 +1,25 @@
 import axios from 'axios';
 import { Params } from '../application/config/axios-interceptor';
-import { User } from '../type/type';
+import { IAccount } from '../models/account_model';
 import { IndexedObject } from '../utils/type';
 
-export const PAGE_SIZE_USERS = 8;
-
-const usersApi: IndexedObject = {
+const accountsApi: IndexedObject = {
   getAll: (params: Params) => {
-    const url = 'users';
+    const url = 'accounts';
     return axios.get(url, { params });
   },
-  create: (data: User) => {
-    const url = 'users';
+  create: (data: IAccount) => {
+    const url = 'accounts';
     return axios.post(url, data);
   },
-  edit: (data: User) => {
-    const url = `users/${data.id}`;
+  edit: (data: IAccount) => {
+    const url = `accounts/${data.id}`;
     return axios.put(url, data);
   },
   delete: (id: string | number) => {
-    const url = `users/${id}`;
+    const url = `accounts/${id}`;
     return axios.delete(url);
   },
 };
 
-export default usersApi;
+export default accountsApi;
