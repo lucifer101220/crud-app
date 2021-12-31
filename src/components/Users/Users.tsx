@@ -291,6 +291,7 @@ const Users: React.FC<IndexedObject> = (props) => {
                 }
                 actions={[
                   <Popconfirm
+                    className="popconfirm_no_footer"
                     key="setting"
                     showCancel={false}
                     icon={<ClockCircleOutlined />}

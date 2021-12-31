@@ -23,4 +23,5 @@ export type City = {
   zip_code?: string;
   id?: number | string;
   country?: string;
+  created_at?: number;
 };

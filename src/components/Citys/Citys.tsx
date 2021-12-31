@@ -28,6 +28,8 @@ import { City } from '../../type/type';
 import { Params } from '../../application/config/axios-interceptor';
 import { AppState } from '../../reducer';
 import CityForm from './CityForm';
+import './Citys.scss';
+import '../Users/Users.scss';
 
 const { Option } = Select;
 const onParams = (sortBy: string, order: string, search?: string) => {
@@ -66,47 +68,38 @@ const Citys: React.FC<IndexedObject> = (props) => {
       key: 'name',
       title: 'Name',
       dataIndex: 'name',
-      width: '30%',
+      width: '22%',
       render: (text: string) => text,
     },
     {
       key: 'state',
       title: 'State',
       dataIndex: 'state',
-      width: '20%',
+      width: '22%',
       render: (text: string) => text,
     },
     {
       key: 'zip_code',
       title: 'Zip code',
       dataIndex: 'zip_code',
-      width: '20%',
+      width: '22%',
       render: (text: string) => text,
     },
     {
       key: 'country',
       title: 'Country',
       dataIndex: 'country',
-      width: '20%',
+      width: '22%',
       render: (text: string) => text,
     },
     {
       key: 'action',
-      // align: 'center',
       title: 'Actions',
-      width: '10%',
+      width: '12%',
       render: (record: City) => (
         <Space size="middle">
           <EditOutlined onClick={() => handleEdit(record)} />
-          <Popconfirm
-            placement="topRight"
-            title="Delete this city ?"
-            onConfirm={() => () => props.deleteCity(record.id)}
-            okText="Delete"
-            cancelText="Cancel"
-          >
-            <DeleteOutlined />
-          </Popconfirm>
+          <DeleteOutlined onClick={() => props.deleteCity(record.id)} />
         </Space>
       ),
     },
@@ -126,7 +119,11 @@ const Citys: React.FC<IndexedObject> = (props) => {
   };
 
   const onFinishAdd = useCallback((values: City) => {
-    props.createCity(values);
+    const data = {
+      ...values,
+      created_at: Date.now(),
+    };
+    props.createCity(data);
     setShowModalAdd(false);
     formAdd.resetFields();
   }, []);
@@ -137,12 +134,15 @@ const Citys: React.FC<IndexedObject> = (props) => {
   };
 
   const onFinishEdit = useCallback((values: City) => {
-    props.editCity(values);
+    const data = {
+      ...values,
+      created_at: Date.now(),
+    };
+    props.editCity(data);
     setShowModalEdit(false);
     formEdit.resetFields();
   }, []);
   //End Data
-  console.log(citysList);
 
   return (
     <div className="page citys_page">
@@ -211,7 +211,7 @@ const Citys: React.FC<IndexedObject> = (props) => {
         <Table
           scroll={{ x: 900 }}
           loading={loading}
-          rowKey={(record) => record.id}
+          rowKey={(record: { id: any }) => record.id}
           columns={columns}
           dataSource={citysList}
           bordered

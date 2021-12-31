@@ -195,3 +195,17 @@ background: linear-gradient(transparent,#06a2aa);
 		padding: 6px 12px;
 	}
 }
+
+.ant-pagination {
+	text-align: right;
+	li, button, .ant-pagination-item-link {
+		border-radius: 5px;
+		min-width: 40px;
+		height: 40px;
+		line-height: 38px;
+		font-size: 18px;
+	}
+	button {
+		font-size: 14px;
+	}
+}

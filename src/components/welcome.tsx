@@ -13,7 +13,7 @@ const WelcomePage: React.FC<IndexedObject> = () => {
       </Helmet>
       <img
         src={publicUrl('/images/welcome.png')}
-        style={{ width: '100%', height: '700px', objectFit: 'cover', objectPosition: '50% 80%' }}
+        style={{ width: '100%', height: '692px', objectFit: 'cover', objectPosition: '50% 80%' }}
         alt="welcome"
       />
     </div>

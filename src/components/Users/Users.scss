@@ -55,19 +55,6 @@
     }
     .pagination {
         padding: 20px 10px 10px;
-        .ant-pagination {
-            text-align: right;
-            li, button {
-                border-radius: 5px;
-                min-width: 40px;
-                height: 40px;
-                line-height: 38px;
-                font-size: 18px;
-            }
-            button {
-                font-size: 14px;
-            }
-        }
     }
 }
 

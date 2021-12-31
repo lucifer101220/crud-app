@@ -5,6 +5,7 @@ import { IndexedObject } from '../utils/type';
 
 const citysApi: IndexedObject = {
   getAll: (params: Params) => {
+    console.log(params);
     const url = 'citys';
     return axios.get(url, { params });
   },
