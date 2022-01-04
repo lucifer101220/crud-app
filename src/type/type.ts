@@ -25,3 +25,12 @@ export type City = {
   country?: string;
   created_at?: number;
 };
+
+export type Company = {
+  name?: string;
+  bs?: string;
+  suffix?: string;
+  adjective?: string;
+  id?: number | string;
+  created_at?: number;
+};

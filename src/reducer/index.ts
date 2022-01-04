@@ -11,6 +11,7 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 import usersReducer, { UsersState } from './usersReducer';
 import citysReducer, { CitysState } from './citysReducer';
 import accountsReducer, { AccountsState } from './accountsReducer';
+import companysReducer, { CompanysState } from './companysReducer';
 
 export type AppState = {
   authentication: AuthenticationState;
@@ -19,6 +20,7 @@ export type AppState = {
   users: UsersState;
   accounts: AccountsState;
   citys: CitysState;
+  companys: CompanysState;
 };
 
 const defaultMiddlewares = [thunkMiddleware, errorMiddleware, promiseMiddleware, loggerMiddleware];
@@ -32,6 +34,7 @@ const rootReducer = combineReducers<AppState>({
   users: usersReducer,
   accounts: accountsReducer,
   citys: citysReducer,
+  companys: companysReducer,
 });
 
 const loadState = () => {

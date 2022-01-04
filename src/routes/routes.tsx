@@ -171,7 +171,7 @@ const Routes: React.FC<IndexedObject> = (props) => {
         >
           <Switch>
             <Route exact path="/">
-              <Redirect to="/users" />
+              <Redirect to="/welcome" />
             </Route>
             {pages.map((component: Page) => (
               <PrivateRoute

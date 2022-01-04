@@ -31,21 +31,6 @@ import CityForm from './CityForm';
 import './Citys.scss';
 import '../Users/Users.scss';
 
-const { Option } = Select;
-const onParams = (sortBy: string, order: string, search?: string) => {
-  if (search) {
-    return {
-      sortBy,
-      order,
-      search,
-    };
-  } else
-    return {
-      sortBy,
-      order,
-    };
-};
-
 const Citys: React.FC<IndexedObject> = (props) => {
   type FormActions = {
     search: string;
